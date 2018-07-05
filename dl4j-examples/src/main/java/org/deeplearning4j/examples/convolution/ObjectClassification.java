@@ -77,7 +77,7 @@ public class ObjectClassification
 
     public void run() throws Exception {
         String savedPath = new ClassPathResource("objectclassification").getFile().toString();
-        String saveAs = savedPath + "/objectModel1.zip";
+        String saveAs = savedPath + "/objectModel.zip";
 
         MultiLayerNetwork network = null;
 
