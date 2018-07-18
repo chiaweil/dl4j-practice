@@ -32,6 +32,8 @@ import org.nd4j.linalg.lossfunctions.LossFunctions;
 import java.awt.*;
 import java.util.Random;
 
+
+
 /**
  * JavaFX application to show a neural network learning to draw an image.
  * Demonstrates how to feed an NN with externally originated data.

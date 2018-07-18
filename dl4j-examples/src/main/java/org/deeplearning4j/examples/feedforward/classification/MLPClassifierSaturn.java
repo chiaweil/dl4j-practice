@@ -42,7 +42,7 @@ public class MLPClassifierSaturn {
         Nd4j.ENFORCE_NUMERICAL_STABILITY = true;
         int batchSize = 50;
         int seed = 123;
-        double learningRate = 0.005;
+        double learningRate = 0.001;
         //Number of epochs (full passes of the data)
         int nEpochs = 30;
 
@@ -108,55 +108,13 @@ public class MLPClassifierSaturn {
 
         }
 
+        System.out.println("TP: " + eval.getTruePositives().totalCount());
+        System.out.println("TN: " + eval.getTrueNegatives().totalCount());
+        System.out.println("FP: " + eval.getFalsePositives().totalCount());
+        System.out.println("FN: " + eval.getFalseNegatives().totalCount());
 
         System.out.println(eval.stats());
-        //------------------------------------------------------------------------------------
-        //Training is complete. Code that follows is for plotting the data & predictions only
 
-
-        double xMin = -15;
-        double xMax = 15;
-        double yMin = -15;
-        double yMax = 15;
-
-        //Let's evaluate the predictions at every point in the x/y input space, and plot this in the background
-        int nPointsPerAxis = 100;
-        double[][] evalPoints = new double[nPointsPerAxis*nPointsPerAxis][2];
-        int count = 0;
-        for( int i=0; i<nPointsPerAxis; i++ ){
-            for( int j=0; j<nPointsPerAxis; j++ ){
-                double x = i * (xMax-xMin)/(nPointsPerAxis-1) + xMin;
-                double y = j * (yMax-yMin)/(nPointsPerAxis-1) + yMin;
-
-                evalPoints[count][0] = x;
-                evalPoints[count][1] = y;
-
-                count++;
-            }
-        }
-
-        INDArray allXYPoints = Nd4j.create(evalPoints);
-        INDArray predictionsAtXYPoints = model.output(allXYPoints);
-
-        //Get all of the training data in a single array, and plot it:
-        rr.initialize(new FileSplit(new File(filenameTrain)));
-        rr.reset();
-        int nTrainPoints = 500;
-        trainIter = new RecordReaderDataSetIterator(rr,nTrainPoints,0,2);
-        DataSet ds = trainIter.next();
-        PlotUtil.plotTrainingData(ds.getFeatures(), ds.getLabels(), allXYPoints, predictionsAtXYPoints, nPointsPerAxis);
-
-
-        //Get test data, run the test data through the network to generate predictions, and plot those predictions:
-        rrTest.initialize(new FileSplit(new File(filenameTest)));
-        rrTest.reset();
-        int nTestPoints = 100;
-        testIter = new RecordReaderDataSetIterator(rrTest,nTestPoints,0,2);
-        ds = testIter.next();
-        INDArray testPredicted = model.output(ds.getFeatures());
-        PlotUtil.plotTestData(ds.getFeatures(), ds.getLabels(), testPredicted, allXYPoints, predictionsAtXYPoints, nPointsPerAxis);
-
-        System.out.println("****************Example finished********************");
     }
 
 }
